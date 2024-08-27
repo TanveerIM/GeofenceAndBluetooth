@@ -28,7 +28,7 @@ class GeofenceBroadcastReceiver: BroadcastReceiver() {
             }
         }
 
-        when(geofencingEvent.geofenceTransition) {
+        when(geofencingEvent?.geofenceTransition) {
             Geofence.GEOFENCE_TRANSITION_ENTER -> {
                 Log.d("BroadcastReceiver", "Geofence ENTER")
                 context?.let { displayNotification(it, "Geofence ENTER") }
