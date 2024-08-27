@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.geofenceandbluetooth.databinding.ActivityMapsBinding
+import com.example.geofenceandbluetooth.services.BluetoothHelper
 import com.example.geofenceandbluetooth.viewmodels.MainViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -20,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Circle
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
@@ -42,8 +42,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private lateinit var circle: Circle
 
-    private val cameraPosition: CameraPosition? = null
-
     // The entry point to the Places API.
     private val placesClient: PlacesClient? = null
 
@@ -61,14 +59,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     // location retrieved by the Fused Location Provider.
     private var lastKnownLocation: Location? = null
 
-    // Keys for storing activity state.
-    // [START maps_current_place_state_keys]
-    private val KEY_CAMERA_POSITION = "camera_position"
-    private val KEY_LOCATION = "location"
-    // [END maps_current_place_state_keys]
-
-    // [END maps_current_place_state_keys]
-    // Used for selecting the current place.
     private val M_MAX_ENTRIES = 5
     private lateinit var likelyPlaceNames: Array<String?>
     private lateinit var likelyPlaceAddresses: Array<String?>
@@ -78,11 +68,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     var geofencePrepared = false
     var geoRadius = 500
 
+    private lateinit var bluetoothHelper: BluetoothHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
@@ -119,6 +113,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
+
+        bluetoothHelper = BluetoothHelper(this, map!!)
+
+        bluetoothHelper.connectToDevice("00:11:22:33:AA:BB")
     }
 
     @SuppressLint("MissingPermission")
