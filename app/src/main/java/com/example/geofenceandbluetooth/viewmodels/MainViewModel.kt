@@ -76,4 +76,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val northEastCorner = SphericalUtil.computeOffset(center, distanceFromCenterToCorner, 45.0)
         return LatLngBounds(southWestCorner, northEastCorner)
     }
+
+    fun stopGeofence() {
+
+    }
 }

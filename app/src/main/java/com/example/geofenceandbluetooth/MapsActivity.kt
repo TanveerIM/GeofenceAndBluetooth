@@ -347,4 +347,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         updateLocationUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.stopGeofence()
+        bluetoothHelper.disconnectFromDevice("00:11:22:33:AA:BB")
+    }
 }
